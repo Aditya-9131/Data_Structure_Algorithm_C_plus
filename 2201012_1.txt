@@ -1,0 +1,47 @@
+#include <stdio.h>
+void searchInMat(int arr[][5], int a, int k2) {
+    int row = 0, colum = a - 1;
+    while (row < a && colum >= 0) {
+        if (arr[row][colum] == k2) {
+            // Element found, print the position and return
+            printf("%d is found at position: (%d, %d)\n", k2, row + 1, colum + 1);
+            return;
+        } else if (arr[row][colum] > k2) {
+            // If the current element is greater than k, move left in the same row
+            colum--;
+        } else {
+            // If the current element is less than k, move down to the next row
+            row++;
+        }
+    }
+
+    // If the loop completes without finding the element
+    printf("%d is not present in the matrix.\n", k2);
+}
+
+
+
+
+
+
+
+
+int main() {
+    int arr[][5] = {
+        {1, 4, 7, 11, 15},
+        {2, 5, 8, 12, 19},
+        {3, 6, 9, 16, 22},
+        {10, 13, 14, 17, 24},
+        {18, 21, 23, 26, 30}
+    };
+
+    int a = sizeof(arr) / sizeof(arr[0]); 
+
+    int k = 5;
+    searchInMat(arr, a, k);
+
+    int k1 = 22;
+    searchInMat(arr, a, k1);
+
+    return 0;
+}

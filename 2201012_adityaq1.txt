@@ -1,0 +1,78 @@
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+class Graph {
+    private int V; 
+    private LinkedList<Integer> adjacencyList[];
+
+    public Graph(int v) {
+        V = v;
+        adjacencyList = new LinkedList[v];
+        for (int i = 0; i < v; ++i) {
+            adjacencyList[i] = new LinkedList<>();
+        }
+    }
+
+    public void addEdge(int v, int w) {
+        adjacencyList[v - 1].add(w - 1);
+    }
+
+    public void printGraph() {
+        for (int i = 0; i < V; ++i) {
+            System.out.print("Vertex " + (i + 1) + " is connected to: ");
+            for (Integer vertex : adjacencyList[i]) {
+                System.out.print((vertex + 1) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public int[] findSet() {
+        int[] arr = new int[V];
+        Arrays.fill(arr, 1);
+        for(int i = 0; i < V; ++i){
+            for(Integer vertex : adjacencyList[i]) {
+                arr[vertex] = 0;
+            }
+        }
+        return arr;
+    }
+}
+
+
+
+public class ques1{
+    public static void main(String args[]) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices: ");
+        int vertices = scanner.nextInt();
+        Graph graph = new Graph(vertices);
+
+        System.out.print("Enter the number of edges: ");
+        int edges = scanner.nextInt();
+
+        System.out.println("Enter the edges (vertex1 vertex2):");
+        for (int i = 0; i < edges; i++) {
+            int v = scanner.nextInt();
+            int w = scanner.nextInt();
+            graph.addEdge(v, w);
+        }
+
+        System.out.println("Adjacency list representation of the graph:");
+        graph.printGraph();
+
+        int[] arr = graph.findSet();
+
+        System.out.println("The set of vertices which will cover all nodes: ");
+        for(int i = 0; i < vertices; i ++){
+            if(arr[i] == 1)
+                System.out.println(i+1 + " ");
+            else  
+             continue;
+        }
+    }
+}

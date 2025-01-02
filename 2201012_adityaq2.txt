@@ -1,0 +1,103 @@
+import java.util.*;
+
+public class ques2 {
+    static class Node {
+        int destination;
+        int weight;
+
+        Node(int destination, int weight) {
+            this.destination = destination;
+            this.weight = weight;
+        }
+    }
+
+    private int vertices;
+    private List<List<Node>> adjacencyList;
+
+    public ques2(int vertices) {
+        this.vertices = vertices;
+        adjacencyList = new ArrayList<>(vertices);
+
+        for (int i = 0; i < vertices; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+    }
+
+    public void addEdge(int source, int destination, int weight) {
+        Node newNode = new Node(destination, weight);
+        adjacencyList.get(source).add(newNode);
+    }
+
+    public int findEquidistantTarget(int p, int q) {
+        int[] distanceFromP = calculateShortestPaths(p);
+        int[] distanceFromQ = calculateShortestPaths(q);
+
+        int equidistantTarget = -1;
+        int minDistance = Integer.MAX_VALUE;
+
+        for (int v = 0; v < vertices; v++) {
+            if (distanceFromP[v] != Integer.MAX_VALUE && distanceFromQ[v] != Integer.MAX_VALUE &&
+                    distanceFromP[v] == distanceFromQ[v] && distanceFromP[v] < minDistance) {
+                minDistance = distanceFromP[v];
+                equidistantTarget = v;
+            }
+        }
+
+        return equidistantTarget;
+    }
+
+    private int[] calculateShortestPaths(int source) {
+        int[] distance = new int[vertices];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[source] = 0;
+
+        PriorityQueue<Node> pq = new PriorityQueue<>(vertices, Comparator.comparingInt(node -> node.weight));
+        pq.offer(new Node(source, 0));
+
+        while (!pq.isEmpty()) {
+            int u = pq.poll().destination;
+
+            for (Node neighbor : adjacencyList.get(u)) {
+                int v = neighbor.destination;
+                int weight = neighbor.weight;
+
+                if (distance[u] != Integer.MAX_VALUE && distance[u] + weight < distance[v]) {
+                    distance[v] = distance[u] + weight;
+                    pq.offer(new Node(v, distance[v]));
+                }
+            }
+        }
+
+        return distance;
+    }
+
+    public static void main(String[] args) {
+        int vertices, edges;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of vertices and Edges:");
+        vertices = sc.nextInt();
+        edges = sc.nextInt();
+        ques2 graph = new ques2(vertices);
+
+        for(int z = 0; z<edges; z++){
+            System.out.println("Enter souce, destination, weight for edge " + z+1);
+            int source, destination, weight;
+            source = sc.nextInt();
+            destination = sc.nextInt();
+            weight = sc.nextInt();
+            graph.addEdge(source, destination, weight);
+        }
+
+        System.out.println("Enter your starting position p and q for your friends");
+        int p = sc.nextInt(); // Your starting location
+        int q = sc.nextInt(); // Your friend's starting location
+
+        int equidistantTarget = graph.findEquidistantTarget(p, q);
+
+        if (equidistantTarget != -1) {
+            System.out.println("Equidistant target from " + p + " and " + q + " is: " + equidistantTarget);
+        } else {
+            System.out.println("No equidistant target exists.");
+        }
+    }
+}
